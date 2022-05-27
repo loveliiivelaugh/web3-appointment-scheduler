@@ -26,7 +26,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignInSide({ account, connect }) {
+export default function SignInSide({ connect }) {
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
@@ -64,25 +64,25 @@ export default function SignInSide({ account, connect }) {
             <Typography component="p" variant="body1">
               web3 appointment scheduling
             </Typography>
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={() => connect()}
-              >
-                Connect Wallet
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  {' '}
-                </Grid>
-                <Grid item>
-                  <Link href="https://metamask.io" variant="body2">
-                    {"Don't have a wallet? Get One"}
-                  </Link>
-                </Grid>
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={() => connect()}
+            >
+              Connect Wallet
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                {' '}
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
+              <Grid item>
+                <Link href="https://metamask.io" variant="body2">
+                  {"Don't have a wallet? Get One"}
+                </Link>
+              </Grid>
+            </Grid>
+            <Copyright sx={{ mt: 5 }} />
           </Box>
         </Grid>
       </Grid>

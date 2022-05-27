@@ -1,18 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import Routes from './Routes';
-import reportWebVitals from './reportWebVitals';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Web3Provider } from './hook';
+import Routes from './Routes';
+import reportWebVitals from './reportWebVitals';
+import './index.css';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <LocalizationProvider dateAdapter={AdapterMoment}>
-      <Routes />
-    </LocalizationProvider>
-  </React.StrictMode>
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <Web3Provider>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <Routes />
+      </LocalizationProvider>
+    </Web3Provider>
+  </StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

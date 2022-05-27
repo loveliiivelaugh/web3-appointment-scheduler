@@ -11,7 +11,7 @@ import abi from '../abis/Calend3.json';
 import logo from '../logo.svg';
 import '../App.css';
 
-const contractAddress = '0x32121De85b42debc2f07a1b2551be2e671BCF724';
+const contractAddress = '0x8Be276ceFb509aB04aC10e687E9446773907a782';
 const contractABI = abi.abi;
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner());
@@ -129,7 +129,8 @@ const Calendar = ({ account }) => {
   }
   const saveRate = async () => {
     console.log('save rate', ethers.utils.parseEther(rate.toString()))
-    return await contract.setRate(ethers.utils.parseEther(rate.toString()));
+    const newRate = await contract.setRate(ethers.utils.parseEther(rate.toString()));
+    console.log(newRate);
   }
   const marks = [
     { value: 0.00, label: 'Free', },
