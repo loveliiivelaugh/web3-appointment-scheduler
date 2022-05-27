@@ -41,10 +41,10 @@ contract Calend3 {
     appointment.amountPaid = ((endTime - startTime) / 60) * rate;
     appointment.attendee = msg.sender; // address of person calling contract
 
-    require(msg.value >= appointment.amountPaid, "We require more ether");
+    // require(msg.value >= appointment.amountPaid, "We require more ether");
 
-    (bool success,) = owner.call{value: msg.value}(""); // send ETH to the owner
-    require(success, "Failed to send Ether");
+    // (bool success,) = owner.call{value: msg.value}(""); // send ETH to the owner
+    // require(success, "Failed to send Ether");
 
     appointments.push(appointment);
   }

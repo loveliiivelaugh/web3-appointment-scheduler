@@ -77,7 +77,7 @@ export default function SignInSide({ account, connect }) {
                   {' '}
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="https://metamask.io" variant="body2">
                     {"Don't have a wallet? Get One"}
                   </Link>
                 </Grid>

@@ -5,8 +5,8 @@ import detectEthereumProvider from '@metamask/detect-provider';
 const Home = React.lazy(() => import('./pages/App'))
 const SignIn = React.lazy(() => import('./pages/SignIn'))
 
-export default function() {
-  const [account, setAccount] = useState(false);
+export default function PageRouter() {
+  const [account, setAccount] = useState(null);
 
   useEffect(() => {
     isConnected()
@@ -17,7 +17,10 @@ export default function() {
     const accounts = await provider.request({ method: 'eth_accounts' });
     console.log({ accounts })
 
-    if (accounts) setAccount(accounts[0]);
+    if (accounts) {
+      setAccount(accounts[0]);
+      // window.location.assign('/');
+    }
     else console.error('No authorized account found.')
   }
 

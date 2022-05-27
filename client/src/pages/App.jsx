@@ -11,12 +11,15 @@ import abi from '../abis/Calend3.json';
 import logo from '../logo.svg';
 import '../App.css';
 
-const contractAddress = '0x8DA9763295Ee4FD07278Ee189979cE835ef137F3';
+const contractAddress = '0x32121De85b42debc2f07a1b2551be2e671BCF724';
 const contractABI = abi.abi;
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner());
 
-const App = ({ account }) => (
+const App = ({ account }) => { 
+  console.log(account, provider, contract);
+  // if (!account) window.location.assign('/connect');
+  return (
   <Container maxWidth={false} className="App">
     <Grid container>
       <img src={logo} className="App-logo" alt="logo" />
@@ -30,7 +33,7 @@ const App = ({ account }) => (
         Web3 Appointment Scheduler for Trainers
       </Typography>
     </Stack>
-    <Calendar account={account} />
+    {account && <Calendar account={account} /> }
     <Grid container sx={{ height: '10vh' }}>
       <Grid item justifyContent="end">
         <Typography variant="body1">
@@ -40,7 +43,7 @@ const App = ({ account }) => (
     </Grid>
   </Container>
 );
-
+}
 export default App;
 
 const schedulerData = [
@@ -50,11 +53,11 @@ const schedulerData = [
 ];
 
 const Calendar = ({ account }) => {
-  console.log({ contract })
+  console.log({ account, contract })
   // admin rate setting functionality
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
-  const [rate, setRate] = useState(false);
+  const [rate, setRate] = useState(0);
   const [appointments, setAppointments] = useState([]);
 
   const [showDialog, setShowDialog] = useState(false);
@@ -71,10 +74,14 @@ const Calendar = ({ account }) => {
   const getData = async () => {
     // get contract owner and set admin if connected account is owner
     const owner = await contract.owner();
-    setIsAdmin(owner.toUpperCase() === account.toUpperCase());
+    console.log({ owner })
+    setIsAdmin(owner.toUpperCase() === account?.toUpperCase());
 
-    const rate = await contract.getRate();
-    setRate(ethers.utils.formatEther(rate.toString()));
+    const { value } = await contract.getRate();
+    console.log(value);
+    const formattedRate = ethers.utils.formatEther(value.toString());
+    console.log({ formattedRate });
+    setRate(formattedRate);
 
     const appointmentData = await contract.getAppointments();
     console.log('got appointments');
@@ -89,9 +96,10 @@ const Calendar = ({ account }) => {
   const saveAppointment = async data => {
     console.info('Appointment Saved');
     console.info({ data });
-    const { added: title, startDate, endDate } = data;
-    const start = new Date(startDate).getTime() / 1000;
-    const end = new Date(endDate).getTime() / 1000;
+    const start = data.added.startDate.getTime() / 1000;
+    const end = data.added.endDate.getTime() / 1000;
+    const { title } = data.added;
+    console.log(start, end)
 
     setShowSign(true);
     setShowDialog(true);
@@ -99,8 +107,9 @@ const Calendar = ({ account }) => {
     
     try {
       const cost = ((end - start) / 60) * rate;
-      const msg = {value: ethers.utils.parseEther(cost.toString())};
-      let transaction = await contract.createAppointment(title, start, end, msg);
+      // const msg = {value: ethers.utils.parseEther(cost.toString())};
+      console.log({ title, start, end  })
+      let transaction = await contract.createAppointment(title, start, end);
 
       setShowSign(false);
 
@@ -114,8 +123,14 @@ const Calendar = ({ account }) => {
   };
 
 
-  const handleSliderChange = (e, newValue) => setRate(newValue);
-  const saveRate = async () => await contract.setRate(ethers.utils.parseEther(rate.toString()));
+  const handleSliderChange = (e, newValue) => {
+    console.log('slider change', newValue)
+    setRate(newValue);
+  }
+  const saveRate = async () => {
+    console.log('save rate', ethers.utils.parseEther(rate.toString()))
+    return await contract.setRate(ethers.utils.parseEther(rate.toString()));
+  }
   const marks = [
     { value: 0.00, label: 'Free', },
     { value: 0.02, label: '0.02 ETH/min', },
@@ -131,7 +146,7 @@ const Calendar = ({ account }) => {
         Set Your Minutely Rate
       </Typography>
       <Slider 
-        defaultValue={parseFloat(rate)}
+        defaultValue={parseInt(rate)}
         step={0.001}
         min={0}
         max={0.1}
