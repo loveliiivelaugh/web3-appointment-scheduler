@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ViewState, EditingState, IntegratedEditing } from '@devexpress/dx-react-scheduler';
 import { Scheduler, WeekView, Appointments, AppointmentForm } from '@devexpress/dx-react-scheduler-material-ui';
-import { SiSolidity } from 'react-icons/si';
+import { SiReact, SiSolidity } from 'react-icons/si';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import { 
   Box, Button, CircularProgress, Container, Dialog, Grid, Paper, Slider, Stack, Typography 
@@ -16,28 +17,29 @@ const contractABI = abi.abi;
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner());
 
-const App = ({ account }) => { 
+const App = ({ account }) => {
+  const navigate = useNavigate();
   console.log(account, provider, contract);
   // if (!account) window.location.assign('/connect');
   return (
   <Container maxWidth={false} className="App">
-    <Grid container>
-      <img src={logo} className="App-logo" alt="logo" />
-      <SiSolidity className="App-logo" style={{ fontSize: '60px' }} />
-    </Grid>
+    <Stack onClick={() => navigate('/connect')}>
+      <SiReact className="App-logo" style={{ fontSize: '20px', cursor: 'pointer' }} />
+      <SiSolidity className="App-logo" style={{ fontSize: '20px', cursor: 'pointer' }} />
+    </Stack>
     <Stack>
       <Typography variant="h2">
-        Calend3 Training
+        Blockchain Scheduler
       </Typography>
       <Typography variant="h5">
-        Web3 Appointment Scheduler for Trainers
+        Scheduling appointments on the blockchain
       </Typography>
     </Stack>
     {account && <Calendar account={account} /> }
     <Grid container sx={{ height: '10vh' }}>
       <Grid item justifyContent="end">
         <Typography variant="body1">
-          Powered by the Ethereum blockchain
+          Powered by the Polygon blockchain
         </Typography>
       </Grid>
     </Grid>
@@ -169,8 +171,8 @@ const Calendar = ({ account }) => {
       <Box sx={{textAlign: 'left', padding: '0px 20px 20px 20px'}}>
           {mined && (
             <Box>
-              Your appointment has been confirmed and is on the blockchain.
-              <a target="_blank" href={`https://goerli.etherscan.io/tx/${transactionHash}`}>View on Etherscan</a>
+              Your appointment has been confirmed and is on the Polygon blockchain.
+              <a target="_blank" href={`https://mumbai.polygonscan.com/tx/${transactionHash}`}>View on Polygonscan</a>
             </Box>
           )}
         {(!mined && !showSign) && (
